@@ -1,9 +1,10 @@
 from chex import Array, ArrayTree
 import numpy as np
 
-from gym import spaces
+# from gym import spaces
+from gxm import spaces
 
-from dreamerv3_flax.env import VecCrafterEnv
+# from dreamerv3_flax.env import VecCrafterEnv
 
 
 class ReplayBuffer:
@@ -11,7 +12,8 @@ class ReplayBuffer:
 
     def __init__(
         self,
-        env: VecCrafterEnv,
+        # env: VecCrafterEnv,
+        env,
         batch_size: int = 16,
         num_steps: int = 64,
         buffer_size: int = int(1e6),

@@ -4,6 +4,8 @@ from chex import Array, ArrayTree
 from flax.core.frozen_dict import FrozenDict
 import flax.linen as nn
 import jax.numpy as jnp
+import jax
+from matplotlib import pyplot as plt
 
 from dreamerv3_flax.decoder import CNNDecoder
 from dreamerv3_flax.distribution import Dist
@@ -18,29 +20,36 @@ class WorldModel(nn.Module):
     obs_shape: Sequence[int]
     num_actions: int
     encoder_kwargs: Dict = FrozenDict(
-        chan=96,
+        # chan=96,
+        chan=64,
         min_res=4,
         act_type="silu",
         norm_type="layer",
     )
     rssm_kwargs: Dict = FrozenDict(
         hid_size=1024,
-        deter_size=4096,
-        stoch_size=32,
-        num_classes=32,
-        uniform_mix=0.01,
+        # deter_size=4096,
+        # stoch_size=32,
+        # num_classes=32,
+        # uniform_mix=0.01,
+        deter_size=8192,
+        stoch_size=64,
+        num_classes=64,
+        uniform_mix=0.1,
         act_type="silu",
         norm_type="layer",
     )
     decoder_kwargs: Dict = FrozenDict(
-        chan=96,
+        # chan=96,
+        chan=64,
         min_res=4,
         act_type="silu",
         norm_type="layer",
     )
     reward_head_kwargs: Dict = FrozenDict(
         hid_size=1024,
-        num_layers=5,
+        # num_layers=5,
+        num_layers=1,
         act_type="silu",
         norm_type="layer",
         scale=0.0,
@@ -52,14 +61,16 @@ class WorldModel(nn.Module):
     )
     cont_head_kwargs: Dict = FrozenDict(
         hid_size=1024,
-        num_layers=5,
+        # num_layers=5,
+        num_layers=1,
         act_type="silu",
         norm_type="layer",
         scale=1.0,
         dist_type="bernoulli",
     )
     loss_coef: Dict = FrozenDict(
-        dyn_loss=0.5,
+        # dyn_loss=0.5,
+        dyn_loss=1.0,
         rep_loss=0.1,
         obs_loss=1.0,
         reward_loss=1.0,

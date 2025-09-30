@@ -8,10 +8,10 @@ import jax
 import jax.numpy as jnp
 from jax.tree_util import tree_map
 
-from gym import spaces
+from gxm import spaces
 
 from dreamerv3_flax.agent import Agent
-from dreamerv3_flax.env import VecCrafterEnv
+# from dreamerv3_flax.env import VecCrafterEnv
 from dreamerv3_flax.optax_util import adam_clip, TrainState
 
 
@@ -20,7 +20,8 @@ class JAXAgent:
 
     def __init__(
         self,
-        env: VecCrafterEnv,
+        # env: VecCrafterEnv,
+        env,
         seed: int = 0,
         model_opt_kwargs: Dict = FrozenDict(lr=1e-4, max_norm=1000.0),
         policy_opt_kwargs: Dict = FrozenDict(lr=3e-5, max_norm=100.0),
@@ -153,6 +154,27 @@ class JAXAgent:
         self.key = key
 
         return action, state
+
+    def key_act(
+        self,
+        key: PRNGKey,
+        obs: Array,
+        first: Array,
+        state: ArrayTree | None = None,
+    ) -> ArrayTree:
+        """Samples an action."""
+        # Get the agent and key.
+        agent = self.agent
+
+        # Sample an action.
+        params = {**self.model_state.params, **self.policy_state.params}
+        stats = {**self.model_state.stats, **self.policy_state.stats}
+        variables = {"params": params, "stats": stats}
+        post_key, prior_key, action_key, key = jax.random.split(key, 4)
+        rngs = {"post": post_key, "prior": prior_key, "action": action_key}
+        action, state = self._act(agent, variables, rngs, obs, first, state=state)
+
+        return action, state, key
 
     @staticmethod
     @jax.jit

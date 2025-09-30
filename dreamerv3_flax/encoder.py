@@ -36,6 +36,7 @@ class CNNEncoder(nn.Module):
     def __call__(self, x: Array) -> Array:
         """Runs the forward pass of the encoder."""
         # Transform the input.
+
         x = x - 0.5
 
         # Apply the convolutional layers.

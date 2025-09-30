@@ -23,7 +23,8 @@ class Policy(nn.Module):
     decay: float = 0.98
     action_head_kwargs: Dict = FrozenDict(
         hid_size=1024,
-        num_layers=5,
+        # num_layers=5,
+        num_layers=3,
         act_type="silu",
         norm_type="layer",
         scale=1.0,
@@ -32,7 +33,8 @@ class Policy(nn.Module):
     )
     value_head_kwargs: Dict = FrozenDict(
         hid_size=1024,
-        num_layers=5,
+        # num_layers=5,
+        num_layers=3,
         act_type="silu",
         norm_type="layer",
         scale=0.0,
